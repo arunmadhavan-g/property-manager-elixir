@@ -2,28 +2,23 @@ defmodule PropertyManagerTest do
   use ExUnit.Case
   doctest PropertyManager
 
-  @doc """
+  defp testKeys, do: ["key",
+                      "key1",
+                      "key1.key2",
+                      "key1.key3"]
 
-    what do we need?
+  defp piped_dels(keys), do: piped_dels(keys,[])
+  defp piped_dels([], gets), do: gets
+  defp piped_dels([head|tail], gets), do: piped_dels(tail,  gets ++[["DEL", head]])
 
-    a propertt manager that helps store and retrieve stuffs.
 
-    First of all we need to store stuffs in a K-V pair, this can be nested too.
-
-    So retrieve the V for a given K
-
-    1. store a K and V
-    2. Retrieve the V for a K
-    3. store a nested K and V
-    4. Retrieve V for a K1.K2 ...
-    5. Retrieve V => a nexted map
-
-    6. Get all this as  a json response.
-    { key:"bla" , value:"{ key:...}"
-
-    When we talk about store, we mean in an actual DB ( Redis in this case)
-
-  """
+  setup do
+    on_exit fn->
+      {:ok, conn}= Redix.start_link()
+      Redix.pipeline(conn, testKeys() |> piped_dels)
+      Redix.stop(conn)
+    end
+  end
 
   test "store a simple key value pair" do
     PropertyManager.put("key","value")
@@ -31,18 +26,18 @@ defmodule PropertyManagerTest do
   end
 
   test "store a single nested key value pair" do
-    PropertyManager.put("key1",%{"key2": "value"})
+    PropertyManager.put("key1",%{"key2" => "value"})
     assert PropertyManager.get("key1.key2") == "value"
   end
 
   test "get map for query of master key" do
-    PropertyManager.put("key1",%{"key2": "value"})
-    assert PropertyManager.get("key1") == %{"key2" => "value", "key3" => "nested Value"}
+    PropertyManager.put("key1",%{"key2" => "value"})
+    assert  PropertyManager.get("key1") == %{"key2" => "value"}
   end
 
   test "add a value with nested key" do
     PropertyManager.put("key1.key3","nested Value")
-    assert PropertyManager.get("key1") == %{"key2" => "value", "key3" => "nested Value"}
+    assert PropertyManager.get("key1") == %{"key3" => "nested Value"}
   end
 
 end

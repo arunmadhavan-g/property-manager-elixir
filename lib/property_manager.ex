@@ -6,7 +6,7 @@ defmodule PropertyManager do
   end
 
   defp put_till_empty([head|tail], key, value) do
-    put(key<>"."<>Atom.to_string(head), value[head])
+    put(key<>"."<> head, value[head])
     put_till_empty(tail, key, value)
   end
 
