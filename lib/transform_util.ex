@@ -7,8 +7,6 @@ defmodule TransformUtil do
 
 
   def deepen_map(map) do
-    #result =%{}
-    #List.foldl Map.keys(map), map , fn (key, map) -> nested_map(key, map[key]) |> Enum.into(result)  end
     keys = Map.keys(map)
     deepen_map(keys, map, %{})
   end

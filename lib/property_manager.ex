@@ -1,6 +1,7 @@
 defmodule PropertyManager do
 
   import TransactionManager
+  import QueryOperations
 
   defp put_till_empty([], _, _) do
   end
@@ -15,10 +16,10 @@ defmodule PropertyManager do
   end
 
   def put(key, value) do
-    transact(&put/3, key, value)
+    transact(&put/3, [key, value])
   end
 
-  def get(key), do: transact(&get/2, key, nil)
+  def get(key), do: transact(&get/2, [key])
 
 end
 
