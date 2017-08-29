@@ -40,4 +40,8 @@ defmodule PropertyManagerTest do
     assert PropertyManager.get("key1") == %{"key3" => "nested Value"}
   end
 
+  test "get a key that is not available gives nil" do
+    assert PropertyManager.get("unavailable") == nil
+  end
+
 end
