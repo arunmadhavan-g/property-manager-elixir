@@ -1,4 +1,4 @@
-defmodule PropertyManager do
+defmodule StorageManager do
 
   import TransactionManager
   import QueryOperations
@@ -20,6 +20,18 @@ defmodule PropertyManager do
   end
 
   def get(key), do: transact(&get/2, [key])
+
+  def append(key, value) do
+    original_val = get(key)
+    case original_val do
+      nil -> put(key, value)
+      _ -> put(key, original_val<>"~"<>value)
+    end
+  end
+
+  def delete(key) do
+    transact(&delete/2, [key])
+  end
 
 end
 
