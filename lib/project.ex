@@ -1,7 +1,13 @@
-defmodule ProjectManager do
+defmodule Project do
   import StorageManager
 
-  def projects(), do: get("project") |> String.split("~")
+  def projects() do
+    project_str = get("project")
+    case project_str do
+      nil -> []
+      _ -> String.split(project_str,"~")
+    end
+  end
 
   def exists?(name), do: Enum.any?(projects(), fn proj-> proj==name end)
 

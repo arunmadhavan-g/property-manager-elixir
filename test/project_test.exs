@@ -1,7 +1,7 @@
-defmodule ProjectManagerTest do
+defmodule ProjectTest do
   use ExUnit.Case
 
-  doctest ProjectManager
+  doctest Project
   import StorageManager
 
   setup do
@@ -12,19 +12,24 @@ defmodule ProjectManagerTest do
 
   test "get the list of projects" do
     put("project","proj1~proj2")
-    assert ProjectManager.projects() == ["proj1","proj2"]
+    assert Project.projects() == ["proj1","proj2"]
+  end
+
+  test "add a new project for the very first time" do
+    Project.create("proj1")
+    assert Project.projects == ["proj1"]
   end
 
   test "add a new project" do
     StorageManager.put("project","proj1~proj2")
-    ProjectManager.create("proj3")
-    assert ProjectManager.projects == ["proj1","proj2","proj3"]
+    Project.create("proj3")
+    assert Project.projects == ["proj1","proj2","proj3"]
   end
 
   test "add a new project with existing name leads to runtime error" do
     StorageManager.put("project" ,"proj1~proj2")
     try do
-      ProjectManager.create("proj2")
+      Project.create("proj2")
       assert false
     rescue
       RuntimeError -> assert 1==1
