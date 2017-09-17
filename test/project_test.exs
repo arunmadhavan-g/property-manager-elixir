@@ -36,4 +36,17 @@ defmodule ProjectTest do
     end
   end
 
+  test "remove project" do
+    put("project","proj1~proj2")
+    Project.delete("proj2")
+    assert Project.projects() == ["proj1"]
+  end
+
+  test "remove project that is not available" do
+    put("project","proj1~proj2")
+    Project.delete("proj3")
+    assert Project.projects() == ["proj1", "proj2"]
+  end
+
+
 end

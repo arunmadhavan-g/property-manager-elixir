@@ -33,6 +33,11 @@ defmodule StorageManager do
     transact(&delete/2, [key])
   end
 
+  def delete_child(parent, child) do
+    new_val = get(parent) |> String.split("~") |> List.delete(child) |> Enum.join("~")
+    put(parent, new_val)
+  end
+
 end
 
 

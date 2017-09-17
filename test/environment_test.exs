@@ -30,44 +30,44 @@ defmodule EnvironmentTest do
   end
 
   test "add a simple key and value to an environment " do
-    Environment.add( env_dev() , "key1" ,"value1")
-    assert Environment.read_value(env_dev(), "key1") == "value1"
+    Environment.Key.add( env_dev() , "key1" ,"value1")
+    assert Environment.Key.read(env_dev(), "key1") == "value1"
   end
 
   test "promote a key from one environment to another" do
-    Environment.add( env_dev() , "key1" ,"value1")
-    assert Environment.read_value(env_qa(), "key1") == nil
+    Environment.Key.add( env_dev() , "key1" ,"value1")
+    assert Environment.Key.read(env_qa(), "key1") == nil
 
-    Environment.promote(env_dev(), "key1", env_qa())
-    assert Environment.read_value(env_qa(), "key1") == "value1"
+    Environment.Key.promote(env_dev(), "key1", env_qa())
+    assert Environment.Key.read(env_qa(), "key1") == "value1"
   end
 
   test "promote a list of keys from one environment to another" do
-    Environment.add(env_dev(),"key1","value1")
-    Environment.add(env_dev(),"key2","value2")
-    Environment.add(env_dev(),"key3","value3")
+    Environment.Key.add(env_dev(),"key1","value1")
+    Environment.Key.add(env_dev(),"key2","value2")
+    Environment.Key.add(env_dev(),"key3","value3")
 
-    Environment.promote(env_dev(), ["key1","key2"], env_qa())
+    Environment.Key.promote(env_dev(), ["key1","key2"], env_qa())
 
-    assert Environment.read_value(env_qa(), "key1") == "value1"
-    assert Environment.read_value(env_qa(), "key2") == "value2"
-    assert Environment.read_value(env_qa(), "key3") == nil
+    assert Environment.Key.read(env_qa(), "key1") == "value1"
+    assert Environment.Key.read(env_qa(), "key2") == "value2"
+    assert Environment.Key.read(env_qa(), "key3") == nil
   end
 
   test "remove a key" do
-    Environment.add(env_dev(),"key1","value1")
-    assert Environment.read_value(env_dev(), "key1") == "value1"
+    Environment.Key.add(env_dev(),"key1","value1")
+    assert Environment.Key.read(env_dev(), "key1") == "value1"
 
-    Environment.remove(env_dev(), "key1")
-    assert Environment.read_value(env_dev(), "key1") == nil
+    Environment.Key.remove(env_dev(), "key1")
+    assert Environment.Key.read(env_dev(), "key1") == nil
   end
 
   test "add a nested key, to an existing key, removed the parent value" do
-    Environment.add(env_dev(),"key1","value1")
-    assert Environment.read_value(env_dev(), "key1") == "value1"
+    Environment.Key.add(env_dev(),"key1","value1")
+    assert Environment.Key.read(env_dev(), "key1") == "value1"
 
-    Environment.add(env_dev(),"key1.key2","value2")
-    assert Environment.read_value(env_dev(), "key1") == %{"key2" => "value2"}
+    Environment.Key.add(env_dev(),"key1.key2","value2")
+    assert Environment.Key.read(env_dev(), "key1") == %{"key2" => "value2"}
   end
 
 

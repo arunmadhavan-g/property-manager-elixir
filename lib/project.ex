@@ -13,6 +13,7 @@ defmodule Project do
 
   def create(name), do:  append("project", available_name(name))
 
+  def delete(name), do: delete_child("project", name)
 
   defp available_name(name), do: available_name(name, exists?(name))
   defp available_name(_, exists) when exists, do: raise "Project Unavailable"
